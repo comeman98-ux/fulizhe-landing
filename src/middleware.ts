@@ -1,59 +1,35 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-const locales = ['zh', 'en'];
-const defaultLocale = 'zh';
+export function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
 
-// Paths that should not be processed by the middleware
-const excludedPaths = [
-  '/api',
-  '/_next',
-  '/favicon.ico',
-  '/robots.txt',
-  '/sitemap.xml',
-  '/storage',
-  '/models',
-];
-
-export function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-
-  // Skip excluded paths
-  if (excludedPaths.some(path => pathname.startsWith(path))) {
+  // 放行 Next 静态资源/图标等
+  if (
+    pathname.startsWith("/_next") ||
+    pathname === "/favicon.ico" ||
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml"
+  ) {
     return NextResponse.next();
   }
 
-  // Check if pathname already has a locale
-  const pathnameHasLocale = locales.some(
-    locale => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  );
-
-  if (pathnameHasLocale) {
+  // 放行密码页 + 解锁接口（否则会死循环）
+  if (pathname.startsWith("/unlock") || pathname.startsWith("/api/unlock")) {
     return NextResponse.next();
   }
 
-  // Get locale from Accept-Language header or use default
-  const acceptLanguage = request.headers.get('accept-language') || '';
-  const browserLocale = acceptLanguage.toLowerCase().includes('en') ? 'en' : defaultLocale;
-  const locale = locales.includes(browserLocale) ? browserLocale : defaultLocale;
+  // 有 cookie 就放行
+  const ok = req.cookies.get("site_unlock")?.value === "1";
+  if (ok) return NextResponse.next();
 
-  // Redirect to locale-prefixed URL
-  const newUrl = new URL(`/${locale}${pathname}`, request.url);
-  newUrl.search = request.nextUrl.search;
-
-  return NextResponse.redirect(newUrl);
+  // 没 cookie → 跳转到密码页，并带上回跳地址
+  const url = req.nextUrl.clone();
+  url.pathname = "/unlock";
+  url.searchParams.set("from", pathname);
+  return NextResponse.redirect(url);
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * - api routes
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder files (images, etc.)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*|storage|models).*)',
-  ],
+  matcher: ["/:path*"], // ✅全站保护（landing.fulizhe.com 这个项目全部页面都要密码）
 };
