@@ -75,9 +75,15 @@ export default function LandingPage() {
             建议完整观看视频介绍，了解团队与训练内容后再报名。
           </p>
 
-          <div className="aspect-video w-full rounded-xl bg-gray-200 flex items-center justify-center text-gray-500">
-            视频区域（可替换为真实视频）
-          </div>
+          <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-gray-200">
+  <iframe
+    src="https://player.bilibili.com/player.html?bvid=BV1gbZYBRE6Q&high_quality=1&danmaku=0"
+    className="absolute inset-0 w-full h-full"
+    frameBorder="0"
+    allowFullScreen
+  ></iframe>
+</div>
+
 
           <div className="text-sm text-gray-500 mt-4">
             观看时长：约 20 分钟
