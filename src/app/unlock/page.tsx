@@ -1,15 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+export const dynamic = "force-dynamic";
+
+import React, { Suspense, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-export default function UnlockPage() {
+function UnlockInner() {
   const [pwd, setPwd] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
   const router = useRouter();
   const sp = useSearchParams();
+
   const from = useMemo(() => sp.get("from") || "/", [sp]);
 
   async function onSubmit(e: React.FormEvent) {
@@ -62,11 +65,15 @@ export default function UnlockPage() {
             {loading ? "验证中..." : "进入"}
           </button>
         </form>
-
-        <div className="text-xs text-gray-400 mt-4">
-          通过后会保存 cookie，之后访问不需要重复输入（可改为每次都输入）。
-        </div>
       </div>
     </main>
+  );
+}
+
+export default function UnlockPage() {
+  return (
+    <Suspense fallback={<div className="p-6">加载中...</div>}>
+      <UnlockInner />
+    </Suspense>
   );
 }
