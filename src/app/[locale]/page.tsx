@@ -129,15 +129,26 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-4 mt-8">
-            <button className="px-6 py-3 rounded-xl bg-gray-900 text-white font-semibold hover:bg-black transition">
-              查看参与要求
-            </button>
+       <div className="flex flex-wrap gap-4 mt-8">
+  <a
+    href="https://mp.weixin.qq.com/s/m9jXXT8A5WDXGpz3hhyyLA"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="px-6 py-3 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800 transition"
+  >
+    查看参与要求
+  </a>
 
-            <button className="px-6 py-3 rounded-xl bg-gray-900 text-white font-semibold hover:bg-black transition">
-              填写报名表
-            </button>
-          </div>
+  <a
+    href="https://kdagtf3y.jsjform.com/f/NMAhtz"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="px-6 py-3 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800 transition"
+  >
+    填写报名表
+  </a>
+</div>
+
         </section>
 
         {/* ================= 联系区域 ================= */}
