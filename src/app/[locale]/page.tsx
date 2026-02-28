@@ -11,7 +11,7 @@ export default function LandingPage() {
         <section className="rounded-2xl bg-white border border-gray-200 shadow-sm p-8 md:p-12">
           <div className="flex flex-col gap-6">
 
-            <div className="text-sm text-gray-500">天穹量化</div>
+            <div className="text-sm text-gray-500">富利量化</div>
 
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
               交易员训练计划（免费筛选制）
